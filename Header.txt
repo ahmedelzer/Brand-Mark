@@ -1,0 +1,1 @@
+header dynamic logo tabs languages button=dashboard

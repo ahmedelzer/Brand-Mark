@@ -1,0 +1,85 @@
+.mainSlider .swiper-pagination-bullets {
+  bottom: 1.5rem;
+}
+.mainSlider .swiper-pagination-bullet,
+.productSlider .swiper-pagination-bullet {
+  background: #f6cd46;
+}
+
+.productSlider .swiper-button-prev::after {
+  font-size: 2rem;
+}
+
+.productSlider .swiper-button-prev::after,
+.productSlider .swiper-button-next::after {
+  font-size: 2rem;
+  color: #f6cd46;
+  padding: 2rem;
+  width: 200px;
+}
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header styles */
+.header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+}
+
+.tab {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #555;
+  cursor: pointer;
+}
+
+.languages {
+  display: flex;
+  gap: 10px;
+}
+
+.language {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #555;
+  cursor: pointer;
+}
+
+.button {
+  padding: 8px 20px;
+  border-radius: 4px;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tabs {
+    margin-top: 10px;
+  }
+}
