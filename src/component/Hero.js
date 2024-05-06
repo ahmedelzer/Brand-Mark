@@ -1,5 +1,7 @@
 import React from "react";
 import Card from "./Card";
+import MainContent from "./MainContent";
+import Posts from "./Posts";
 
 function Hero() {
   return (
@@ -29,6 +31,7 @@ function Hero() {
         {/* <i class="fas fa-angle-left change-background fa-2x"></i>
       <i class="fas fa-angle-right change-background fa-2x"></i> */}
       </div>
+      <MainContent />
       <div class="container my-5 flex-1 flex-wrap lg:items-center sm:justify-center flex-row gap-4 flex justify-between">
         <Card />
         <Card />
@@ -37,6 +40,7 @@ function Hero() {
         <Card />
         <Card />
       </div>
+      <Posts />
     </div>
   );
 }

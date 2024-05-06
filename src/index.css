@@ -14,6 +14,9 @@
   .h2 {
     @apply text-3xl capitalize;
   }
+  .card-shadow {
+    @apply shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)];
+  }
   .grad {
     @apply bg-gradient-to-t from-[#1F2126] to-[#33363D] drop-shadow-2xl;
   }
@@ -21,7 +24,7 @@
     @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
   }
   .btn-accent {
-    @apply bg-accent text-primary hover:bg-accent-hover transition-all;
+    @apply bg-accent hover:bg-accent-hover transition-all;
   }
   .input {
     @apply h-[50px] rounded-[8px] w-full outline-none px-6 text-primary;
@@ -131,6 +134,12 @@ html {
   border-color: var(--main-color);
 }
 /* End Landing */
+.ltr {
+  direction: ltr !important;
+}
+.rtl {
+  direction: rtl !important;
+}
 .hid {
   opacity: 0;
   filter: blur(5px);

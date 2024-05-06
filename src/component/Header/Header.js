@@ -35,7 +35,7 @@ function Header() {
                     </a>
                   </li>
                 </ul>
-                <button className="btn btn-accent ml-4">sigh</button>
+                <button className="btn btn-accent mx-4">sigh</button>
               </div>
               <div id="main-nav" className="col-lg-6 pl-0 d-none d-lg-block">
                 <ul
@@ -48,12 +48,12 @@ function Header() {
                       itemscope="itemscope"
                       itemtype="https://www.schema.org/SiteNavigationElement"
                       id={`menu-item-${item.id}`}
-                      className=" !text-white font-bold text-[19px] p-2 hover:underline duration-300 transition-all"
+                      className=" !text-white font-bold text-[19px] p-2  duration-300 transition-all"
                     >
                       <Link
-                        to={`/matore/${item.id}`}
+                        to={item.rout}
                         title={lan === "AR" ? item.titleAR : item.titleEN}
-                        className="nav-link !text-white whitespace-nowrap"
+                        className="nav-link !text-white hover:!text-accent whitespace-nowrap"
                       >
                         {lan === "AR" ? item.titleAR : item.titleEN}
                       </Link>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Data } from "./Data";
 import { CartContext } from "../context/CartContext";
 import Hero from "./Hero";
+import MainContent from "./MainContent";
 
 function Home() {
   const [items, setItems] = useState([]);
@@ -72,6 +73,7 @@ function Home() {
           );
         })}
       </div> */}
+      {/* <MainContent /> */}
       <Hero />
     </div>
   );

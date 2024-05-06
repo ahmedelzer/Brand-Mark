@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Logo from "../assets/LogoFooter.png";
+import Logo from "../assets/Logo.jpg";
 import { Link } from "react-router-dom";
 import { Data } from "./Data";
 import { CartContext } from "../context/CartContext";
