@@ -301,7 +301,7 @@ const Form = () => {
   // };
 
   return (
-    <div className="container">
+    <div className="container body">
       <div className="bg-[#d6d9e6] md:bg-white rounded-xl md:p-3 md:flex justify-center">
         <div className="relative">
           <img

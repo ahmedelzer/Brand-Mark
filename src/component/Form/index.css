@@ -1,10 +1,10 @@
-body {
-  /* background-color: hsl(229, 24%, 87%); */
+.body {
+  background-color: hsl(229, 24%, 87%);
   font-family: ubuntu-regular;
 }
 
 @media (min-width: 765px) {
-  body {
+  .body {
     display: flex;
     justify-content: center;
     align-items: center;
