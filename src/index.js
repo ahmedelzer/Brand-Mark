@@ -11,7 +11,7 @@ import CartProvider from "./context/CartContext";
 import Loading from "./component/Loading";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Suspense fallback={Loading}>
+  <Suspense fallback={<Loading />}>
     <React.StrictMode>
       <CartProvider>
         <App />

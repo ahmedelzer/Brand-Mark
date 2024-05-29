@@ -24,10 +24,12 @@ import NotFound404 from "./component/NotFound404";
 import Services from "./pages/Services";
 import Form from "./component/Form/Form";
 import Portfolio from "./pages/Portfolio";
+import Nav from "./component/Header/Nav";
 const Layout = () => {
   return (
     <div>
       <Header />
+      {/* <Nav /> */}
       <Outlet />
       <Footer />
     </div>

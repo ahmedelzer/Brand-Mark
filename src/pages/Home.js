@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import Hero from "../component/Hero";
+import useFetch from "../hooks/APIsFunctions/useFetch";
+import Loading from "../component/Loading";
 function Home() {
+  const { data, isLoading } = useFetch(
+    "/Home/GetFullHomeMainContents?PageSize=11&PageNumber=1"
+  );
+  console.log(data);
   const [items, setItems] = useState([]);
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="">
       {/* <div

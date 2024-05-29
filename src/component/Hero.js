@@ -3,8 +3,15 @@ import Card from "./Card";
 import MainContent from "./MainContent";
 import Posts from "./Posts";
 import Content from "./Content";
+import useFetch from "../hooks/APIsFunctions/useFetch";
 
 function Hero() {
+  const { data: fullHomeMainContents } = useFetch(
+    "Home/GetFullHomeMainContents?PageSize=11&PageNumber=1"
+  );
+  const { data: postData } = useFetch(
+    "Home/GetFullHomeMainContents?PageSize=11&PageNumber=1"
+  );
   return (
     <div>
       <div class="landing">
@@ -33,16 +40,23 @@ function Hero() {
       <i class="fas fa-angle-right change-background fa-2x"></i> */}
       </div>
       {/* <MainContent /> */}
+      {/* {mainContent?.dataSource.map((content) => ( */}
       <Content />
+      {/* // key={content.homeMainContentID}
+      // postTitle={content.postTitle} */}
+      {/* ))} */}
       <div class="container my-5 flex-1 flex-wrap lg:items-center sm:justify-center flex-row gap-4 flex justify-between">
-        <Card />
+        {postData?.dataSource.map((post) => (
+          <Card key={post.homePostID} postTitle={post.postTitle} />
+        ))}
+
         <Card />
         <Card />
         <Card />
         <Card />
         <Card />
       </div>
-      <Posts />
+      <Posts data={fullHomeMainContents} />
     </div>
   );
 }

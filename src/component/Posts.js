@@ -14,7 +14,7 @@ import "../slider.css";
 import Card from "./Card";
 import Cookies from "js-cookie";
 import i18next from "i18next";
-function Posts() {
+function Posts({ data }) {
   const [autoplay, setAutoplay] = useState({});
   const [isEnded, setIsEnded] = useState(false);
   const [type, setType] = useState("");
@@ -50,21 +50,54 @@ function Posts() {
   useEffect(() => {
     setDir(i18next.dir());
   }, [lng]);
-  let data = [
-    { scr: image, type: "image" },
-    { scr: v, type: "video" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-    { scr: image, type: "image" },
-  ];
+  // let data = [
+  //   { scr: image, type: "image" },
+  //   { scr: v, type: "video" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  //   { scr: image, type: "image" },
+  // ];
+  // fullHomeMainContents
+  // {
+  //   "dataSource": [
+  //     {
+  //       "postWithDisplayFiles": {
+  //         "post": {
+  //           "postID": "5f78a506-f0f9-43f8-a705-9742c66afd47",
+  //           "creationDate": "2024-04-27T15:57:51.33",
+  //           "postTitle": "testing",
+  //           "postDescription": "done test"
+  //         },
+  //         "displayFiles": []
+  //       },
+  //       "postID": "5f78a506-f0f9-43f8-a705-9742c66afd47"
+  //     },
+  //     {
+  //       "postWithDisplayFiles": {
+  //         "post": {
+  //           "postID": "5f78a506-f0f9-43f8-a705-9742c66afd47",
+  //           "creationDate": "2024-04-27T15:57:51.33",
+  //           "postTitle": "testing",
+  //           "postDescription": "done test"
+  //         },
+  //         "displayFiles": []
+  //       },
+  //       "postID": "5f78a506-f0f9-43f8-a705-9742c66afd47"
+  //     }
+  //   ],
+  //   "count": 2
+  // }
+  // console.log(data.dataSource[0].postWithDisplayFiles.post.postDescription);
+  // console.log(data.dataSource[0].postWithDisplayFiles.displayFiles);
+  console.log(data);
   return (
     <>
       <div className={`container`} id="swiper-product">
@@ -99,10 +132,16 @@ function Posts() {
           }}
           className="productSlider mySwiper mx-auto max-w-[360px] md:max-w-lg xl:max-w-[1410px] "
         >
-          {data.map((item, index) => {
+          {data?.dataSource.map((item) => {
             return (
-              <SwiperSlide key={index} data-type={item.type}>
-                <Card src={item.scr} type={item.type} setIsEnded={setIsEnded} />
+              <SwiperSlide key={item?.postID} data-type={item.type}>
+                <Card
+                  postTitle={item?.postWithDisplayFiles.post.postTitle}
+                  src={item?.postWithDisplayFiles.displayFiles}
+                  description={item?.postWithDisplayFiles.post.postDescription}
+                  type={item?.type}
+                  setIsEnded={setIsEnded}
+                />
               </SwiperSlide>
             );
           })}

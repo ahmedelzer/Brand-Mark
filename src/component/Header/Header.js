@@ -19,9 +19,9 @@ function Header() {
     >
       <div className="container">
         <nav className="row navbar navbar-expand-xl p-lg-0 !justify-between">
-          <div className="col-4 col-sm-5 col-lg-10 col-md-8 nav-band pl-0 md:order-1">
+          <div className="col-4 col-sm-5 col-lg-10 col-md-8 !hidden lg:!flex nav-band pl-0 md:order-1">
             <div className="row">
-              <div className="col-lg-6 d-flex nav-band-right !justify-center align-items-center md:order-1">
+              <div className="col-lg-6 d-flex nav-band-right !justify-center  align-items-center md:order-1">
                 <ul className="flex items-center space-x-4">
                   <LanguageSelector />
                   <li className="wishlist-tab hidden">

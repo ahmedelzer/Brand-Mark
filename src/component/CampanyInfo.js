@@ -1,22 +1,15 @@
 import React from "react";
+import PageHeading from "./PageHeading";
 
 function CampanyInfo() {
   return (
     <section class="!bg-transparent" id="contact">
-      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div class="mb-4">
-          <div class="mb-6 max-w-3xl text-center sm:text-center md:mx-auto md:mb-12">
-            <p class="text-base font-semibold uppercase tracking-wide text-accent">
-              Contact
-            </p>
-            <h2 class="font-heading mb-4 font-bold tracking-tight text-3xl sm:text-5xl">
-              Get in Touch
-            </h2>
-            <p class="mx-auto mt-4 max-w-3xl text-xl !text-primary">
-              In hac habitasse platea dictumst
-            </p>
-          </div>
-        </div>
+      <div class="heading">
+        <PageHeading
+          subTitle={"Get in Touch"}
+          title={"Contact"}
+          desc={"In hac habitasse platea dictumst"}
+        />
         <div class="flex items-stretch justify-center">
           <div class="grid md:grid-cols-2">
             <div class="h-full pr-6">

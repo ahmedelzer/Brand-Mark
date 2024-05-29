@@ -24,8 +24,104 @@
 //   return head;
 // }
 // Example usage:
-function sortSequence(sequence) {
-  //coding and coding..
-  return sequence.sort((a, b) => a - b);
+// Define the Node class
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
 }
-console.log(sortSequence([3, 2, 1, 0, 5, 6, 4, 0, 1, 5, 3, 0, 4, 2, 8, 0]));
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+  }
+
+  // Add a node to the end of the list
+  append(data) {
+    const newNode = new Node(data);
+    if (!this.head) {
+      this.head = newNode;
+      return;
+    }
+    let current = this.head;
+    while (current.next) {
+      current = current.next;
+    }
+    current.next = newNode;
+  }
+
+  // Add a node to the beginning of the list
+  prepend(data) {
+    const newNode = new Node(data);
+    newNode.next = this.head;
+    this.head = newNode;
+  }
+
+  // Print the list
+  printList() {
+    let current = this.head;
+    let list = "";
+    while (current) {
+      list += current.data + " -> ";
+      current = current.next;
+    }
+    console.log(list + "null");
+  }
+
+  // Remove a node by value
+  remove(data) {
+    if (!this.head) {
+      return;
+    }
+    if (this.head.data === data) {
+      this.head = this.head.next;
+      return;
+    }
+    let current = this.head;
+    while (current.next && current.next.data !== data) {
+      current = current.next;
+    }
+    if (current.next) {
+      current.next = current.next.next;
+    }
+  }
+
+  // Find a node by value
+  find(data) {
+    let current = this.head;
+    while (current && current.data !== data) {
+      current = current.next;
+    }
+    return current;
+  }
+}
+const list = new LinkedList();
+list.append(10);
+list.append(20);
+list.append(30);
+list.prepend(5);
+function length(head) {
+  let temp = head;
+  let length = 0;
+  while (temp != null) {
+    length += 1;
+    temp = temp.next;
+  }
+  return length;
+}
+
+function count(head, data) {
+  let temp = head;
+  console.log(temp);
+  let count = 0;
+  while (temp != null) {
+    if (temp.data == data) {
+      count += 1;
+    }
+    temp = temp.next;
+  }
+  return count;
+}
+console.log(count(list.head, 10));
+list.printList(); // Example input

@@ -34,6 +34,7 @@ i18n
     interpolation: {
       escapeValue: false, // react already safes from xss
     },
+    backend: {},
     fallbackLng: "en",
   });
 
