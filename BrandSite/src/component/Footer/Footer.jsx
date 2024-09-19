@@ -1,0 +1,196 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import { localization } from "../Localization";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa";
+import { footerStyles } from "./styles";
+import logo from "../../assets/Logo.png";
+import { headerStyles } from "../Header/style";
+function Footer() {
+  return (
+    <footer className={footerStyles.footerContainer}>
+      <div className={footerStyles.innerContainer}>
+        <div className={footerStyles.gridContainer}>
+          <div className={footerStyles.blockContainer}>
+            <h4 className={footerStyles.headerText}>
+              {localization.footer.categories}
+            </h4>
+            <ul className={footerStyles.linkList}>
+              {localization.routes.map((item) => (
+                <li className={footerStyles.linkItem} key={item.id}>
+                  <Link
+                    to={item.route}
+                    title={item.title}
+                    className={footerStyles.link}
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={footerStyles.blockContainer}>
+            <h4 className={footerStyles.textWhiteBold}>Products</h4>
+            <ul className={footerStyles.linkList}>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Figma UI System
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Icons Assets
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Responsive Blocks
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Components Library
+                </a>
+              </li>
+              <li>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Plugin Guide
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className={footerStyles.blockContainer}>
+            <h4 className={footerStyles.textWhiteBold}>Resources</h4>
+            <ul className={footerStyles.linkList}>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  FAQs
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Quick Start
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Documentation
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  User Guide
+                </a>
+              </li>
+              <li>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Plugin Guide
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className={footerStyles.blockContainer}>
+            <h4 className={footerStyles.textWhiteBold}>Support</h4>
+            <ul className={footerStyles.linkList}>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Customer Support
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Cookies
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  License
+                </a>
+              </li>
+              <li className={footerStyles.linkItem}>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Terms & Conditions
+                </a>
+              </li>
+              <li>
+                <a
+                  href="javascript:;"
+                  className={footerStyles.textGrayHoverWhite}
+                >
+                  Privacy Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className={footerStyles.borderTop}>
+          <div className={footerStyles.flexContainer}>
+            {/* Add other content here if necessary */}
+            <Link to="/" className={footerStyles.logoContainer}>
+              <img src={logo} alt="Logo" className={headerStyles.logoImage} />
+            </Link>
+
+            <span className={footerStyles.content}>
+              {localization.footer.copyRight}
+            </span>
+            <div className={footerStyles.socialLinks}>
+              <Link className={footerStyles.linkIcon}>
+                <FaXTwitter />
+              </Link>
+              <Link className={footerStyles.linkIcon}>
+                <FaInstagram size={20} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
