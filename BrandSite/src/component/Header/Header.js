@@ -1,15 +1,18 @@
 import React, { useContext, useState } from "react";
 import Logo from "../../assets/Logo.png";
-import CategoryNavMobile from "../CategoryNavMobile";
+import CategoryNavMobile from "./CategoryNavMobile";
 import { Link } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
-import { Data } from "../Data";
-import { CartContext } from "../../context/Language";
+import { CartContext, LanguageContext } from "../../context/Language";
 import LanguageSelector from "./LanguageSelector";
-import { localization } from "../Localization";
 import { headerStyles } from "./style";
 function Header() {
   const [open, setOpen] = useState(false);
+  const [selectedPage, setSelectedPage] = useState(window.location.pathname);
+  const { localization } = useContext(LanguageContext);
+  function ChangePage(e) {
+    setSelectedPage(e.target.title);
+  }
   return (
     <header className={headerStyles.container}>
       <div className={headerStyles.headerWrapper}>
@@ -24,10 +27,19 @@ function Header() {
               <li
                 key={item.id}
                 id={`menu-item-${item.id}`}
-                className={headerStyles.navItem}
+                className={
+                  headerStyles.navItem +
+                  `${
+                    (selectedPage === item.title) |
+                    (selectedPage === item.route)
+                      ? " text-accent"
+                      : "text-text"
+                  }`
+                }
               >
                 <Link
                   to={item.route}
+                  onClick={ChangePage}
                   title={item.title}
                   className={headerStyles.navLink}
                 >
@@ -45,12 +57,13 @@ function Header() {
           <a
             href={localization.header.buttonUrl}
             role="button"
-            className="main-button"
+            className="main-button mx-4"
           >
             {localization.header.buttonText}
           </a>
         </div>
         <div className={headerStyles.mobileMenuIcon}>
+          <LanguageSelector />
           <a
             href={localization.header.buttonUrl}
             role="button"

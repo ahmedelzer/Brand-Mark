@@ -1,85 +1,62 @@
+/* Use Tailwind classes to replace colors and spacing */
+
 .mainSlider .swiper-pagination-bullets {
-  bottom: 1.5rem;
-}
-.mainSlider .swiper-pagination-bullet,
-.productSlider .swiper-pagination-bullet {
-  background: #f6cd46;
+  @apply bottom-6; /* 1.5rem in Tailwind is `bottom-6` */
 }
 
-.productSlider .swiper-button-prev::after {
-  font-size: 2rem;
+.mainSlider .swiper-pagination-bullet,
+.productSlider .swiper-pagination-bullet {
+  @apply bg-accent; /* Custom accent color defined in your Tailwind config */
 }
 
 .productSlider .swiper-button-prev::after,
 .productSlider .swiper-button-next::after {
-  font-size: 2rem;
-  color: #f6cd46;
-  padding: 2rem;
-  width: 200px;
+  @apply text-4xl text-accent p-8 w-[200px]; /* Tailwind classes for font size, color, padding, and width */
 }
-/* Reset CSS */
+
+/* Reset CSS remains as is */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Header styles */
+/* Header styles using Tailwind */
 .header {
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @apply bg-gray-800 text-text py-2.5 px-5 flex items-center justify-between; /* Tailwind equivalents */
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
+  @apply text-2xl font-bold;
 }
 
 .tabs {
-  display: flex;
-  gap: 20px;
+  @apply flex gap-5;
 }
 
 .tab {
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #555;
-  cursor: pointer;
+  @apply py-2 px-3 rounded-md bg-card cursor-pointer;
 }
 
 .languages {
-  display: flex;
-  gap: 10px;
+  @apply flex gap-2.5;
 }
 
 .language {
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #555;
-  cursor: pointer;
+  @apply py-2 px-3 rounded-md bg-card cursor-pointer;
 }
 
 .button {
-  padding: 8px 20px;
-  border-radius: 4px;
-  background-color: #007bff;
-  border: none;
-  color: #fff;
-  cursor: pointer;
+  @apply py-2.5 px-5 rounded-md bg-accent text-text cursor-pointer;
 }
 
-/* Media query for responsiveness */
+/* Responsive styles */
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
-    align-items: flex-start;
+    @apply flex-col items-start;
   }
 
   .tabs {
-    margin-top: 10px;
+    @apply mt-2.5;
   }
 }

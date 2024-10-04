@@ -1,6 +1,8 @@
 import {
   BooleanParameter,
   DateParameter,
+  PhoneNumberParameter,
+  SelectParameter,
   // DateTimeParameter,
   // ImageParameterWithPanelActions,
   // LookupInput,
@@ -10,14 +12,14 @@ export function GetInputComponent(type) {
   switch (type) {
     case "text" || "float" || "numeric":
       return TextParameter;
-    // case "datetime":
-    //   return DateTimeParameter;
+    case "select":
+      return SelectParameter;
     case "date":
       return DateParameter;
     case "boolean":
       return BooleanParameter;
-    // case "image":
-    //   return ImageParameterWithPanelActions;
+    case "phoneNumber":
+      return PhoneNumberParameter;
     // case "lookup":
     //   return LookupInput;
     default:

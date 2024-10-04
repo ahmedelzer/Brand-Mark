@@ -1,8 +1,9 @@
-import React from "react";
-import { localization } from "./Localization";
+import React, { useContext } from "react";
 import { staffStyles } from "./styles";
+import { LanguageContext } from "../context/Language";
 
 function Staff() {
+  const { localization } = useContext(LanguageContext);
   return (
     <div className={staffStyles.container}>
       <section className={staffStyles.section}>

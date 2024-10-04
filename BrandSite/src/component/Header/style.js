@@ -1,6 +1,6 @@
 export const headerStyles = {
   container: "w-full container m-auto",
-  headerWrapper: "flex !flex-nowrap items-center justify-between py-4",
+  headerWrapper: "flex !flex-nowrap items-center justify-between py-1",
   logoWrapper: "flex items-center",
   logoImage: "w-[100px] h-[100px]",
   navListWrapper: "hidden lg:flex !flex-row items-center space-x-6",

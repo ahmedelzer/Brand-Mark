@@ -11,7 +11,7 @@ export default function FieldGroup({ value, onChange, ...props }) {
   // };
 
   return (
-    <input
+    <Input
       {...props}
       onChange={onChange}
       onFocus={props.onFocus}

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import Request from "./Request";
-import { localization } from "./Localization";
 import PageHeading from "./PageHeading";
 import { contactUsStyles } from "./styles";
+import { LanguageContext } from "../context/Language";
 
 function ContactUs() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <div className={contactUsStyles.container}>
       <section className={contactUsStyles.section}>
@@ -32,7 +34,7 @@ function ContactUs() {
                         viewBox="0 0 24 24"
                         stroke-width="2"
                         stroke="currentColor"
-                        class="h-6 w-6"
+                        className="h-6 w-6"
                       >
                         <path
                           stroke-linecap="round"
@@ -68,7 +70,7 @@ function ContactUs() {
                         viewBox="0 0 24 24"
                         stroke-width="2"
                         stroke="currentColor"
-                        class="h-6 w-6"
+                        className="h-6 w-6"
                       >
                         <path
                           stroke-linecap="round"
@@ -102,7 +104,7 @@ function ContactUs() {
                         viewBox="0 0 24 24"
                         stroke-width="2"
                         stroke="currentColor"
-                        class="h-6 w-6"
+                        className="h-6 w-6"
                       >
                         <path
                           stroke-linecap="round"
@@ -136,7 +138,7 @@ function ContactUs() {
                         viewBox="0 0 24 24"
                         stroke-width="2"
                         stroke="currentColor"
-                        class="h-6 w-6"
+                        className="h-6 w-6"
                       >
                         <path
                           stroke-linecap="round"

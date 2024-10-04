@@ -1,4 +1,4 @@
-const observerCallback = useCallback(
+export const observerCallback = useCallback(
   (entries) => {
     const [entry] = entries;
     if (entry.isIntersecting && rows.length < totalCount && !loading) {

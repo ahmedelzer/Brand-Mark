@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { localization } from "../Localization";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import { footerStyles } from "./styles";
 import logo from "../../assets/Logo.png";
 import { headerStyles } from "../Header/style";
+import { LanguageContext } from "../../context/Language";
 function Footer() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <footer className={footerStyles.footerContainer}>
       <div className={footerStyles.innerContainer}>
@@ -16,7 +18,7 @@ function Footer() {
               {localization.footer.categories}
             </h4>
             <ul className={footerStyles.linkList}>
-              {localization.routes.map((item) => (
+              {localization.routes?.map((item) => (
                 <li className={footerStyles.linkItem} key={item.id}>
                   <Link
                     to={item.route}

@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Posts from "../component/Posts";
 import PageHeading from "../component/PageHeading";
 import useFetch from "../hooks/APIsFunctions/useFetch";
 import Loading from "../component/Loading";
 import MainContent from "../component/MainContent";
 import PlayList from "../component/PlayList";
-import { localization } from "../component/Localization";
+import { LanguageContext } from "../context/Language";
 
 function Portfolio() {
-  // const { data: portfolioWork, isLoading } = useFetch(
-  //   "PortfolioWork/GetFullPortfolioWorks?PageSize=11&PageNumber=1"
-  // );
+  const { localization } = useContext(LanguageContext);
+
+  const { data: portfolioWorks, isLoading } = useFetch(
+    "PortfolioWork/GetFullPortfolioWorks?PageSize=11&PageNumber=1"
+  );
   let portfolioWork = {
     dataSource: [
       {
@@ -45,22 +47,21 @@ function Portfolio() {
     ],
     count: 1,
   };
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
-  console.log(
-    "portfolioWork",
-    portfolioWork?.dataSource[0].postWithDisplayFiles
-  );
-  let data = [
-    { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/028.jpg", id: 1 },
-    { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/033.jpg", id: 2 },
-    { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/079.jpg", id: 3 },
-  ];
+  if (isLoading) {
+    return <Loading />;
+  }
+  // let data = [
+  //   { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/028.jpg", id: 1 },
+  //   { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/033.jpg", id: 2 },
+  //   { file: "https://mdbcdn.b-cdn.net/img/new/standard/city/079.jpg", id: 3 },
+  // ];
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <section className="">
       <div className="container">
-        <div class="heading">
+        <div className="heading">
           <PageHeading
             subTitle={localization.portfolio.PageHeading.subTitle}
             title={localization.portfolio.PageHeading.title}
@@ -72,6 +73,7 @@ function Portfolio() {
         </h2>
         {portfolioWork?.dataSource.map((item) => (
           <MainContent
+            key={item.portfolioWorkID}
             files={item.postWithDisplayFiles}
             playList={true}
             portfolio={true}

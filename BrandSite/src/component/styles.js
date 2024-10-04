@@ -9,7 +9,7 @@ export const heroStyles = {
   bulletTwoActive: "two active",
   bulletThree: "three",
   container:
-    "container my-5 flex-1 flex-wrap lg:items-center sm:justify-center flex-row gap-4 flex justify-between",
+    "container my-5 flex-1 flex-wrap lg:items-center lg:justify-evenly justify-center flex-row gap-4 flex",
 };
 export const contentStyles = {
   container: "container my-24 mx-auto md:px-6",
@@ -27,24 +27,23 @@ export const contentStyles = {
   articleTitle: "mb-4 text-2xl font-bold",
   articleMeta: "mb-4 flex items-center text-sm font-medium text-accent",
   articleDescription: "mb-6 text-sm text-text",
-  articleText: "text-primary",
+  articleText: "!text-primary",
 };
 export const mainContentStyles = {
   container: "", // Add any specific class names or Tailwind classes for the container here if needed
-  flexWrap: "mb-16 flex flex-wrap",
+  flexWrap: "mb-16 flex flex-wrap ",
   firstColumn:
     "mb-6 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:w-6/12 lg:px-6",
   rippleEffect:
-    "ripple relative overflow-hidden rounded-lg bg-cover bg-[50%] bg-no-repeat shadow-lg dark:shadow-black/20",
+    "ripple relative overflow-hidden rounded-lg bg-cover bg-[50%] bg-no-repeat shadow-lg",
   image: "w-full",
   hoverOverlay:
     "absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-[hsl(0,0%,98.4%,0.2)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100",
   secondColumn: "w-full shrink-0 grow-0 basis-auto lg:w-6/12 lg:pl-6 relative",
   articleTitle: "mb-4 text-2xl font-bold",
-  articleMeta:
-    "mb-4 flex items-center text-sm font-medium text-danger dark:text-danger-500",
-  articleDescription: "mb-6 text-sm text-neutral-500 dark:text-neutral-300",
-  articleText: "text-neutral-500 dark:text-neutral-300",
+  articleMeta: "mb-4 flex items-center text-sm font-medium text-accent",
+  articleDescription: "mb-6 text-sm text-text",
+  articleText: "!text-primary",
   reviewSection: "pt-2",
 };
 export const reviewStyles = {
@@ -67,11 +66,11 @@ export const actionsStyles = {
 };
 export const playlistStyles = {
   container:
-    "con my-5 relative flex justify-between !text-white flex-wrap md:flex-nowrap",
-  swiperWrapper: "w-full my-8",
+    "mt-5 relative flex justify-between text-text flex-wrap md:flex-nowrap",
+  swiperWrapper: "w-full",
   button:
     "duration-300 transition-all rounded-md hover:opacity-70 cursor-pointer bg-transparent overflow-hidden",
-  selectedButton: "border border-x-black border-y-black",
+  selectedButton: " opacity-50 border-2 border-accent",
   image: "md:rounded-[0px] rounded-sm",
 };
 export const cardStyles = {
@@ -81,7 +80,7 @@ export const cardStyles = {
     "productSlider mySwiper mx-auto max-w-[360px] md:max-w-lg xl:max-w-[1410px]",
   image: "w-full",
   video: "shadow-lg",
-  contentContainer: "px-6 py-4",
+  contentContainer: "px-6 py-1",
   title: "font-bold text-accent text-xl mb-2",
   description: "text-base",
   tagContainer: "px-6 pt-4 pb-2",
@@ -131,12 +130,12 @@ export const staffStyles = {
   role: "mb-6",
   socialIcons: "mx-auto flex list-inside justify-center",
   icon: "px-2",
-  iconSvg: "h-4 w-4 dark:text-primary-400",
-  iconSvgPrimary: "h-4 w-4 text-primary dark:text-primary-400",
-  iconSvgSm: "h-3.5 w-3.5 text-primary",
+  iconSvg: "h-4 w-4 dark:!text-primary-400",
+  iconSvgPrimary: "h-4 w-4 !text-primary dark:!text-primary-400",
+  iconSvgSm: "h-3.5 w-3.5 !text-primary",
 };
 export const serviceStyles = {
-  container: "container",
+  container: "w-full container m-auto",
   heading: "heading",
   categoryWrapper: "mb-4 pb-4",
   serviceWrapper: "flex flex-wrap -mx-4",
@@ -148,6 +147,7 @@ export const brandServiceCategoryStyles = {
   tab: "px-4 border-b-2 rounded-b-md",
   activeTab: "!border-accent",
   inactiveTab: "!border-primary hover:!border-accent",
+  description: "mt-5 !text-primary text-xl",
 };
 export const brandServiceStyles = {
   container: "w-full md:w-1/2 lg:w-1/3 px-4",
@@ -194,5 +194,8 @@ export const contactUsStyles = {
   iconStyle: "inline-block rounded-md bg-teal-400-100 p-4 text-accent",
   infoTextWrapper: "ml-6 grow",
   infoTitle: "mb-2 font-bold",
-  infoDetails: "text-primary",
+  infoDetails: "!text-primary",
+};
+export const listObserverStyle = {
+  container: "h-px", // Sets height to 1 pixel
 };

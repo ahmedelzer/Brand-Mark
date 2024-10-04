@@ -1,8 +1,10 @@
-import React from "react";
-import { localization } from "./Localization";
+import React, { useContext } from "react";
 import { requestStyles } from "./styles";
+import { LanguageContext } from "../context/Language";
 
 function Request() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <form className={requestStyles.form}>
       <div className={requestStyles.divWrapper}>

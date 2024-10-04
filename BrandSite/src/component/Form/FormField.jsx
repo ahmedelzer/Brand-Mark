@@ -44,26 +44,21 @@ const FormField = ({
           />
         );
       case "date":
-        return (
-          <DatepickerComponent
-            name={name}
-            setInfo={setInfo}
-          />
-        );
+        return <DatepickerComponent name={name} setInfo={setInfo} />;
       case "switch":
         return (
-          <div class="flex flex-wrap p-2">
-            <div class="flex items-center me-4">
+          <div className="flex flex-wrap p-2">
+            <div className="flex items-center me-4">
               <input
                 id="red-radio"
                 type="radio"
                 value=""
                 name="colored-radio"
-                class="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
+                className="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
               />
               <label
                 for="red-radio"
-                class="ms-2 text-sm font-medium mx-2 text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium mx-2 text-gray-900 dark:text-gray-300"
               >
                 Male
               </label>
@@ -72,11 +67,11 @@ const FormField = ({
                 type="radio"
                 value=""
                 name="colored-radio"
-                class="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
+                className="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
               />
               <label
                 for="red-radio"
-                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 Female
               </label>

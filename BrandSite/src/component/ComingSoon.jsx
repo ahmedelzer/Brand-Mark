@@ -1,8 +1,10 @@
-import React from "react";
-import { localization } from "./Localization";
+import React, { useContext } from "react";
 import { comingSoonStyles } from "./styles"; // Import the styles
+import { LanguageContext } from "../context/Language";
 
 function ComingSoon() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <div className={comingSoonStyles.container}>
       <h1 className={comingSoonStyles.title}>

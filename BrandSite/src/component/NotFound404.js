@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { localization } from "./Localization";
 import { notFoundStyles } from "./styles"; // Import the styles
+import { LanguageContext } from "../context/Language";
 
 function NotFound404() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <section className={notFoundStyles.section}>
       <div className={notFoundStyles.container}>

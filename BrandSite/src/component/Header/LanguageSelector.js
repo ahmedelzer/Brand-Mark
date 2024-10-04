@@ -1,16 +1,103 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { languageSelectorStyles } from "./style";
-
+import { GetProjectUrl, SetHeaders, SetReoute } from "../../request";
+import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
+import UseFetchWithoutBaseUrl from "../../hooks/APIsFunctions/UseFetchWithoutBaseUrl";
+import schemaLanguages from "../../Schemas/LanguageSchema/LanguageSchema.json";
+import LanguageSchemaActions from "../../Schemas/LanguageSchema/LanguageSchemaActions.json";
+import LocalizationSchemaActions from "../../Schemas/Localization/LocalizationSchemaActions.json";
+import { LanguageContext } from "../../context/Language";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
 const LanguageSelector = () => {
+  const [selectedLanguage, SetSelectedLanguage] = useState(null); // or an appropriate default value
+  SetReoute(schemaLanguages.projectProxyRoute);
+  const dataSourceAPI = (query) =>
+    buildApiUrl(query, {
+      pageIndex: 1,
+      pageSize: 1000,
+      activeStatus: 1,
+    });
+  const getAction =
+    LanguageSchemaActions &&
+    LanguageSchemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Get"
+    );
+  const query = dataSourceAPI(getAction);
+  const { data } = UseFetchWithoutBaseUrl(query);
+  const { setRight, setLocalization, setLan, Right, Lan } =
+    useContext(LanguageContext);
+
+  useEffect(() => {
+    if (
+      !Lan ||
+      Right === null ||
+      !window.localStorage.getItem("localization") ||
+      !window.localStorage.getItem("languageID")
+    ) {
+      const shortName = data?.dataSource[0]?.shortName;
+
+      const language = data?.dataSource?.find(
+        (language) => language.shortName === shortName
+      );
+      SetSelectedLanguage(shortName);
+      PrepareLanguage(shortName, language);
+    } else {
+      SetSelectedLanguage(window.localStorage.getItem("language")); // Set the state from localStorage
+    }
+  }, [data]);
+
   const changeLanguage = (e) => {
-    const selectedLanguage = e.target.value;
-    // i18n.changeLanguage(selectedLanguage);
-    console.log(selectedLanguage);
+    const shortName = e.target.value;
+    const language = data?.dataSource?.find(
+      (language) => language.shortName === shortName
+    );
+    SetSelectedLanguage(shortName);
+
+    window.localStorage.setItem("language", shortName);
+    SetHeaders();
+    PrepareLanguage(shortName, language);
   };
-  const lng = Cookies.get("i18next") || "en";
+  function PrepareLanguage(shortName, language) {
+    SetSelectedLanguage(shortName);
+    setLan(shortName);
+    if (language) {
+      setRight(language.rightDirectionEnable);
+      window.localStorage.setItem("right", language.rightDirectionEnable);
+      window.localStorage.setItem("languageID", language.languageID);
+      window.localStorage.setItem("language", shortName);
+    }
+  }
+  //localization
+  const getLocalizationAction = LocalizationSchemaActions?.find(
+    (action) => action.dashboardFormActionMethodType === "Get"
+  );
+
+  // Using useFetch hook to fetch data
+  const language = selectedLanguage || window.localStorage.getItem("language");
+  const { data: localization } = useFetch(
+    `/${getLocalizationAction?.routeAdderss}/${language}`,
+    GetProjectUrl()
+  );
+
+  useEffect(() => {
+    if (localization) {
+      const localFormat = localization?.replace(
+        /ObjectId\("([^"]+)"\)/g,
+        '"$1"'
+      );
+
+      // Parse the formatted string into a JavaScript object
+      const dataObject = JSON.parse(localFormat);
+      delete dataObject._id;
+      // setLocalization(dataObject);
+      // window.localStorage.removeItem("localization");
+
+      window.localStorage.setItem("localization", JSON.stringify(dataObject));
+    }
+  }, [localization, setLocalization]);
 
   return (
     <form className={languageSelectorStyles.form}>
@@ -23,10 +110,19 @@ const LanguageSelector = () => {
             id="language"
             name="language"
             className={languageSelectorStyles.select}
+            value={language} // Set the selected language here
             onChange={changeLanguage}
-            // value={lng}
           >
-            <option value="en" className={languageSelectorStyles.option}>
+            {data?.dataSource?.map((name) => (
+              <option
+                value={name.shortName}
+                key={name.shortName}
+                className={languageSelectorStyles.option}
+              >
+                {name.shortName}
+              </option>
+            ))}
+            {/* <option value="en" className={languageSelectorStyles.option}>
               English
             </option>
             <option value="fr" className={languageSelectorStyles.option}>
@@ -40,7 +136,7 @@ const LanguageSelector = () => {
             </option>
             <option value="es" className={languageSelectorStyles.option}>
               Spanish
-            </option>
+            </option> */}
           </select>
           <div className={languageSelectorStyles.svgContainer}>
             <svg

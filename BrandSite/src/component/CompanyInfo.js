@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import PageHeading from "./PageHeading";
-import { localization } from "./Localization";
 import { sectionStyles } from "./styles";
+import { LanguageContext } from "../context/Language";
 
 function CompanyInfo() {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <section className={sectionStyles.container} id="contact">
       <div className={sectionStyles.heading}>

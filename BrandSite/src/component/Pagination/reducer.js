@@ -3,7 +3,14 @@ function reducer(state, { type, payload }) {
     case "UPDATE_ROWS":
       return {
         ...state,
-        rows: [...state.rows, ...payload?.rows], // Append new rows to the existing rows
+        rows: Array.from(
+          new Map(
+            [...state?.rows, ...payload?.rows].map((item) => [
+              item[state.key],
+              item,
+            ])
+          ).values()
+        ), // Append new rows to the existing rows
         totalCount: payload.totalCount,
         loading: false,
       };

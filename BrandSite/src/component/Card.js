@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Pagination, Navigation, Autoplay } from "swiper";
 import "swiper/swiper-bundle.css";
@@ -10,23 +10,42 @@ import "../slider.css";
 import Cookies from "js-cookie";
 import i18next from "i18next";
 import { cardStyles } from "./styles"; // Import the styles
+import TypeFile from "./TypeFile";
+import { defaultProjectProxyRouteWithoutAPI } from "../request";
+import { LanguageContext } from "../context/Language";
 
-function Card({ postTitle, description, src, type, setIsEnded }) {
-  const videoRef = useRef(null);
+function Card({ postTitle, description, src, moveNextCard }) {
+  const { Right } = useContext(LanguageContext);
   const [autoplay, setAutoplay] = useState({});
+  const [allMediaPlayed, setAllMediaPlayed] = useState(false); // Track if all files are played
   const [isSEnded, setIsSEnded] = useState(false);
-  const [typeFile, setType] = useState("");
+  const dir = Right ? "rtl" : "ltr";
+
+  const [type, setType] = useState("image");
   const [position, setPosition] = useState(false);
-  const [dir, setDir] = useState(i18next.dir());
-  let swiper = document.querySelector("#swiper-product");
+  const swiperRef = useRef(null); // Ref to control swiper instance
 
   const handleSlideChange = (swiper) => {
     const currentSlide = swiper.slides[swiper.realIndex];
-    const type = currentSlide.getAttribute("data-type");
-    setType(type);
+    const currentType = currentSlide.getAttribute("data-type");
+    setType(currentType);
+
+    // if (currentType === "video") {
+    //   // swiper.autoplay.stop(); // Stop autoplay for videos
+    //   // swiper.autoplay.start();
+    //   // setAutoplay({ delay: 1500 });
+    // } else {
+    //   setAutoplay({ delay: 1500 }); // Resume autoplay for images
+    //   swiper.autoplay.start();
+    // }
+  };
+  // Function to handle when the video ends
+  const handleVideoEnd = () => {
+    setIsSEnded(true);
   };
 
   window.onscroll = function () {
+    const swiper = document.querySelector("#swiper-product");
     if (window.scrollY >= swiper?.offsetTop - 500) {
       setPosition(true);
     } else {
@@ -35,101 +54,76 @@ function Card({ postTitle, description, src, type, setIsEnded }) {
   };
 
   useEffect(() => {
-    if (position === true) {
-      if (isSEnded === true || type === "image") {
-        setAutoplay({ delay: 1500 });
-      } else {
-        setAutoplay({ delay: 11119 });
-      }
+    if (position && (isSEnded || type === "image")) {
+      console.log("====================================");
+      console.log(position, isSEnded, type);
+      console.log("====================================");
+      setAutoplay(true);
+      // if (swiperRef.current) {
+      //   swiperRef.current.autoplay.start();
+      // }
+    } else {
+      //make sure `autoplay` is enabled when swiper is initialized and loaded from config file
+      // setAutoplay(false);
+      // setAutoplay({ autoplay: 15000 });
     }
-    console.log(type, isSEnded, autoplay);
   }, [type, isSEnded, position]);
-
-  const lng = Cookies.get("i18next") || "en";
   SwiperCore.use([Pagination, Navigation, Autoplay]);
 
-  useEffect(() => {
-    setDir(i18next.dir());
-  }, [lng]);
-
-  const handleVideoEnd = () => {
-    console.log("Video ended!");
-    setIsEnded(true);
-  };
-
-  const handleType = () => {
-    return src?.map((file) => {
-      switch (type) {
-        case "image":
-          return (
-            <img
-              className={cardStyles.image}
-              id="myVideo"
-              src={file}
-              alt="Media content"
-            />
-          );
-        case "video":
-          return (
-            <video
-              ref={videoRef}
-              autoPlay
-              controls
-              muted
-              onEnded={handleVideoEnd}
-              className={cardStyles.video}
-            >
-              <source src={file} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          );
-        default:
-          return null;
-      }
-    });
-  };
-
+  // useEffect(() => {
+  //   if (allMediaPlayed) {
+  //     moveNextCard(); // Move to the next card
+  //   }
+  // }, [isSEnded, src, moveNextCard]);
+  // console.log("====================================");
+  // console.log(src);
+  // console.log("====================================");
   return (
     <div className={cardStyles.container}>
       <Swiper
         modules={[Pagination, Navigation, Autoplay]}
         autoplay={autoplay}
         dir={dir}
+        ref={swiperRef}
         navigation={false}
-        onSlideChange={(swiper) => handleSlideChange(swiper)}
-        breakpoints={{
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          768: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          1024: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          1440: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
+        onReachEnd={(swiper) => {
+          swiper.autoplay.stop();
+          setAllMediaPlayed(true);
         }}
-        pagination={{
-          clickable: true,
+        onSlideChange={(swiper) => {
+          // Only trigger handleSlideChange for the first slide (index 0)
+          handleSlideChange(swiper);
         }}
         className={cardStyles.swiper}
       >
-        {handleType()}
+        <div>
+          {src &&
+            src.map((file, index) => (
+              <SwiperSlide
+                key={file.displayFileForPostID || index}
+                data-type={file.fileCodeNumber === 0 ? "image" : "video"}
+              >
+                <TypeFile
+                  file={`${defaultProjectProxyRouteWithoutAPI}${file.displayFile}`}
+                  title={""}
+                  type={file.fileCodeNumber === 0 ? "image" : "video"}
+                  handleVideoEnd={
+                    file.fileCodeNumber === 1 ? handleVideoEnd : null
+                  }
+                />
+              </SwiperSlide>
+            ))}
+        </div>
+        {/* <SwiperSlide
+        // key={file.displayFileForPostID || index}
+        // data-type={file.fileCodeNumber === 0 ? "image" : "video"}
+        >
+          ahmed
+        </SwiperSlide> */}
       </Swiper>
       <div className={cardStyles.contentContainer}>
         <div className={cardStyles.title}>{postTitle}</div>
-        <p className={cardStyles.description}>
-          {description}
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
-          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
-          nihil.
-        </p>
+        <p className={cardStyles.description}>{description}</p>
       </div>
       <div className={cardStyles.tagContainer}>
         <span className={`${cardStyles.tag} ${cardStyles.tagPhotography}`}>

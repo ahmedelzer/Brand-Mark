@@ -5,9 +5,8 @@ import ComingSoon from "./component/ComingSoon";
 import Footer from "./component/Footer/Footer";
 import Form from "./component/Form/Form";
 import Header from "./component/Header/Header";
-import { localization } from "./component/Localization";
 import NotFound404 from "./component/NotFound404";
-import { CartContext } from "./context/Language";
+import { CartContext, LanguageContext } from "./context/Language";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Portfolio from "./pages/Portfolio";
@@ -17,11 +16,11 @@ import Test from "./pages/Test";
 import About from "./pages/About";
 const Layout = () => {
   return (
-    <div>
+    <main>
       <Header />
       <Outlet />
       <Footer />
-    </div>
+    </main>
   );
 };
 
@@ -46,24 +45,12 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
-  useEffect(() => {
-    // window.document.dir = "ltr";
-    document.title = localization.appInfo.siteTitle;
-  });
+  const { localization, Right } = useContext(LanguageContext);
 
-  // useEffect(() => {
-  // i18n();
-  // Function to update document title based on language
-  // const updateDocumentTitle = () => {
-  //   document.title =
-  //     lan === "AR" ? "خلخال الملكة للمجوهرات" : "Queen's anklet for jewelry";
-  // };
-  // updateDocumentTitle();
-  // return () => {
-  //   // Reset the document title when the component unmounts
-  //   document.title = "خلخال الملكة للمجوهرات";
-  // };
-  // }, [lan]);
+  useEffect(() => {
+    window.document.dir = Right ? "rtl" : "ltr";
+    document.title = localization.appInfo.title;
+  }, [Right]);
 
   return (
     <>

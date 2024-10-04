@@ -1,6 +1,5 @@
-import { baseURL } from "../../../request";
-
-export function BuildApiUrl(apiRequest, constants) {
+import { GetProjectUrl } from "../../request";
+export function buildApiUrl(apiRequest, constants) {
   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
     // Handle the case where apiRequest is null or does not have dashboardFormSchemaActionQueryParams
     return null; // or some default value or throw an error, depending on your use case
@@ -13,7 +12,6 @@ export function BuildApiUrl(apiRequest, constants) {
     )
     .join("&");
 
-  const apiUrl = `${baseURL}/${apiRequest.routeAdderss}?${queryParam}`;
-  console.log(apiUrl);
+  const apiUrl = `${GetProjectUrl()}/${apiRequest.routeAdderss}?${queryParam}`;
   return apiUrl;
 }

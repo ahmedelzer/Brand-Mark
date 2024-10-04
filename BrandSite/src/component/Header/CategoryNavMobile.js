@@ -2,11 +2,15 @@ import React, { useContext } from "react";
 import { FiX } from "react-icons/fi";
 //link
 import { Link } from "react-router-dom";
-import { Data } from "./Data";
-import { categoryNavMobileStyles } from "./Header/style";
-import { localization } from "./Localization";
+import { categoryNavMobileStyles } from "./style";
+import { LanguageContext } from "../../context/Language";
 
 const CategoryNavMobile = ({ setCatNavMobile }) => {
+  const { localization } = useContext(LanguageContext);
+  console.log("====================================");
+  console.log(localization.routes);
+  console.log("====================================");
+
   return (
     <div className={categoryNavMobileStyles.container}>
       <div
@@ -16,7 +20,7 @@ const CategoryNavMobile = ({ setCatNavMobile }) => {
         <FiX className={categoryNavMobileStyles.closeButtonIcon} />
       </div>
       <div className={categoryNavMobileStyles.linkWrapper}>
-        {localization.routes.map((item) => (
+        {localization.routes?.map((item) => (
           <Link
             key={item.id} // Add a unique key
             to={item.route}
