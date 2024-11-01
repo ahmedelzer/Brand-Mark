@@ -3,6 +3,7 @@ export function CreateInputProps(param, value) {
     fieldName: param.parameterField,
     title: param.parameterTitel,
     value: value,
+    values: param.values,
     enable: param.isEnable,
     type: param.parameterType,
   };

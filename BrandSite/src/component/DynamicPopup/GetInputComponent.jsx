@@ -14,6 +14,8 @@ export function GetInputComponent(type) {
       return TextParameter;
     case "select":
       return SelectParameter;
+    case "datetime":
+      return DateParameter;
     case "date":
       return DateParameter;
     case "boolean":

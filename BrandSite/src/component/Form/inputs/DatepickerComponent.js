@@ -1,23 +1,36 @@
-import { data } from "autoprefixer";
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ar } from "date-fns/locale"; // Import Arabic locale
 
-function DatepickerComponent({ setInfo, name, ...props }) {
-  const [selectedDate, setSelectedDate] = useState("");
+// Register the Arabic locale
+registerLocale("ar", ar);
+
+function DatepickerComponent({ name, ...props }) {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateIso, setSelectedDateIso] = useState(null);
+  const handleDateChange = (date) => {
+    if (date) {
+      const isoDateString = date.toISOString(); // Convert to ISO string
+      setSelectedDate(date); // Store the ISO date string
+      setSelectedDateIso(isoDateString);
+    }
+  };
   return (
-    <div>
+    <>
       <DatePicker
         id="datePicker"
-        name={name}
         {...props}
-        // placeholderText={}
         selected={selectedDate}
-        onChange={(data) => setSelectedDate(data)}
+        placeholderText={props.placeholder}
+        showTimeSelect={props.type === "datetime"}
+        onChange={handleDateChange}
         showYearDropdown
-        className={`font-medium w-full mt-1 p-2 pl-3  rounded-lg border-1 text-[#02295a] text-[15px] hover:border-[#02295a] focus:border-white focus:ring-[#bfe2fd]`}
+        locale="ar"
+        className={`${props.className} form-control`}
       />
-    </div>
+      <input type="hidden" name={name} value={selectedDateIso} />
+    </>
   );
 }
 

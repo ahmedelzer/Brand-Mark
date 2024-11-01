@@ -1,6 +1,7 @@
 import React from "react";
 import BaseInput from "./BaseInput";
 import { LanguageContext } from "../../../context/Language";
+import { booleanParameterStyle as styles } from "./styles";
 
 class BooleanParameter extends BaseInput {
   handleChange = (e) => {
@@ -12,37 +13,32 @@ class BooleanParameter extends BaseInput {
 
   render() {
     const { localization } = this.context;
-    const { value, fieldName, Enable, onKeyPress } = this.props;
+    const { values, value, fieldName, Enable, onKeyPress } = this.props;
 
     return (
-      <div className="flex flex-wrap p-2">
-        <div className="flex items-center me-4">
+      <div className={styles.container}>
+        <div className={styles.radioGroup}>
           <input
             id={fieldName}
             type="radio"
             value={1}
             Enable={Enable}
             name={fieldName}
-            className="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
+            required
+            // disabled={!Enable} // Add disable functionality
           />
-          <label
-            for={fieldName}
-            className="ms-2 text-sm font-medium mx-2 text-gray-900 dark:text-gray-300"
-          >
-            Male
+          <label htmlFor={fieldName} className={styles.radioLabel}>
+            {values[1]}
           </label>
           <input
-            id="red-radio"
+            required
+            id={`${fieldName}-no`}
             type="radio"
             value={0}
             name={fieldName}
-            className="w-4 h-4  bg-gray-100  dark:bg-gray-700 dark:border-gray-600"
           />
-          <label
-            for="red-radio"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Female
+          <label htmlFor={`${fieldName}-no`} className={styles.radioLabel}>
+            {values[0]}
           </label>
         </div>
       </div>

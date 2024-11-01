@@ -10,6 +10,9 @@ import schemaLanguages from "../../Schemas/LanguageSchema/LanguageSchema.json";
 import LanguageSchemaActions from "../../Schemas/LanguageSchema/LanguageSchemaActions.json";
 import LocalizationSchemaActions from "../../Schemas/Localization/LocalizationSchemaActions.json";
 import { LanguageContext } from "../../context/Language";
+import staticLocalization from "../../context/staticLocalization.json";
+import { DeepMerge } from "./deepMerge";
+
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 const LanguageSelector = () => {
   const [selectedLanguage, SetSelectedLanguage] = useState(null); // or an appropriate default value
@@ -31,12 +34,7 @@ const LanguageSelector = () => {
     useContext(LanguageContext);
 
   useEffect(() => {
-    if (
-      !Lan ||
-      Right === null ||
-      !window.localStorage.getItem("localization") ||
-      !window.localStorage.getItem("languageID")
-    ) {
+    if (!Lan || Right === null || !window.localStorage.getItem("languageID")) {
       const shortName = data?.dataSource[0]?.shortName;
 
       const language = data?.dataSource?.find(
@@ -54,20 +52,17 @@ const LanguageSelector = () => {
     const language = data?.dataSource?.find(
       (language) => language.shortName === shortName
     );
-    SetSelectedLanguage(shortName);
-
-    window.localStorage.setItem("language", shortName);
-    SetHeaders();
     PrepareLanguage(shortName, language);
   };
   function PrepareLanguage(shortName, language) {
     SetSelectedLanguage(shortName);
     setLan(shortName);
     if (language) {
-      setRight(language.rightDirectionEnable);
-      window.localStorage.setItem("right", language.rightDirectionEnable);
       window.localStorage.setItem("languageID", language.languageID);
       window.localStorage.setItem("language", shortName);
+      SetHeaders();
+      window.localStorage.setItem("right", language.rightDirectionEnable);
+      setRight(language.rightDirectionEnable);
     }
   }
   //localization
@@ -92,10 +87,10 @@ const LanguageSelector = () => {
       // Parse the formatted string into a JavaScript object
       const dataObject = JSON.parse(localFormat);
       delete dataObject._id;
-      // setLocalization(dataObject);
-      // window.localStorage.removeItem("localization");
+      const marge = DeepMerge(staticLocalization, dataObject);
+      setLocalization(marge);
 
-      window.localStorage.setItem("localization", JSON.stringify(dataObject));
+      window.localStorage.setItem("localization", JSON.stringify(marge));
     }
   }, [localization, setLocalization]);
 

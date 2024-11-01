@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import { LanguageContext } from "../../../context/Language";
+import React, { useContext, useState } from "react";
+import { Button, Input, InputGroup } from "reactstrap";
 
 const countryCodes = [
   { code: "+1", country: "USA" },
+  { code: "+20", country: "EG" },
   { code: "+44", country: "UK" },
   { code: "+91", country: "India" },
   { code: "+61", country: "Australia" },
@@ -10,6 +13,8 @@ const countryCodes = [
 ];
 
 function PhoneNumberParameter({ value, fieldName, enable, onKeyPress }) {
+  const { Right } = useContext(LanguageContext);
+
   const [selectedCode, setSelectedCode] = useState(countryCodes[0].code);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -21,11 +26,12 @@ function PhoneNumberParameter({ value, fieldName, enable, onKeyPress }) {
   };
 
   return (
-    <div className="flex items-center mt-2">
-      <div className="relative">
-        <button
+    <div className="flex items-center mt-2" dir="ltr">
+      <InputGroup>
+        {/* <div className=" w-full"> */}
+        <Button
           id="dropdown-phone-button"
-          className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center form-control"
+          className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-center border-[#dee2e6] bg-white !text-[#212529] text-md font-bold"
           type="button"
           onClick={toggleDropdown}
         >
@@ -45,9 +51,9 @@ function PhoneNumberParameter({ value, fieldName, enable, onKeyPress }) {
               d="m1 1 4 4 4-4"
             />
           </svg>
-        </button>
+        </Button>
         {showDropdown && (
-          <ul className="absolute z-10 mt-1 w-[100%] bg-black border rounded-lg shadow-lg">
+          <ul className="absolute z-10 mt-1 w-fit bg-black border rounded-lg shadow-lg">
             {countryCodes.map((item) => (
               <li
                 key={item.code}
@@ -59,21 +65,22 @@ function PhoneNumberParameter({ value, fieldName, enable, onKeyPress }) {
             ))}
           </ul>
         )}
-      </div>
+        {/* </div> */}
 
-      <div className="relative w-full">
-        <input
+        {/* <div className="relative w-full"> */}
+        <Input
           type="tel"
+          dir={`${Right ? "rtl" : "ltr"}`}
           name={fieldName}
           readOnly={!enable}
           value={value}
           id="phone-input"
           aria-describedby="helper-text-explanation"
-          className="block p-2.5 w-full z-20 text-sm form-control"
           placeholder="123-456-7890"
           required
         />
-      </div>
+        {/* </div> */}
+      </InputGroup>
     </div>
   );
 }

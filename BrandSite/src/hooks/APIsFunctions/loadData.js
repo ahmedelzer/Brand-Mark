@@ -1,9 +1,10 @@
-import { languageID, languageName, SetHeaders, token } from "../../request";
+import { SetHeaders } from "../../request";
 
 export default function LoadData(
   state,
   dataSourceAPI,
   getAction,
+  cache,
   updateRows,
   dispatch
 ) {
@@ -12,8 +13,9 @@ export default function LoadData(
   const query = dataSourceAPI(getAction, requestedSkip, take);
   if (!getAction) return;
   if (query !== lastQuery && !loading) {
-    if (state.rows.length === take) {
-      // updateRows(requestedSkip, take);
+    const cached = cache.getRows(requestedSkip, take);
+    if (cached.length === take) {
+      updateRows(requestedSkip, take);
     } else {
       dispatch({ type: "FETCH_INIT" });
       fetch(query, {
@@ -30,16 +32,8 @@ export default function LoadData(
             // RedirectToLogin(navigate, dataSource);
             return;
           }
-          // const response = {
-          //   ...state,
-          //   rows: dataSource,
-          //   totalCount: count,
-          // };
-          //todo handle here
-          // return response;
-
-          // cache.setRows(requestedSkip, dataSource);
-          updateRows(requestedSkip, dataSource, count);
+          cache.setRows(requestedSkip, dataSource);
+          updateRows(requestedSkip, take, count);
         })
         .catch(() => dispatch({ type: "REQUEST_ERROR" }));
     }

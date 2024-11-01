@@ -20,6 +20,15 @@ function reducer(state, { type, payload }) {
         requestedSkip: payload.requestedSkip,
         take: payload.take,
       };
+    case "RESET_SERVICE_LIST":
+      return {
+        ...state,
+        rows: [], // Clear existing services
+        skip: 0,
+        requestedSkip: 0, // Reset pagination
+        totalCount: 0,
+        loading: true, // Set loading to true so that new data can be fetched
+      };
     case "REQUEST_ERROR":
       return {
         ...state,
@@ -35,6 +44,7 @@ function reducer(state, { type, payload }) {
         ...state,
         lastQuery: payload,
       };
+
     default:
       return state;
   }

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import CheckBox from "../component/CheckBox";
+import { useEffect, useState } from "react";
+import Loading from "../component/Loading/Loading";
 import Service from "../component/Service";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import Loading from "../component/Loading";
-import serviceSchema from "../Schemas/ServiceSchema/ServiceSchema.json";
-import serviceSchemaActions from "../Schemas/ServiceSchema/ServiceSchemaActions.json";
 import { GetProjectUrl, SetReoute } from "../request";
-import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
+import serviceSchema from "../Schemas/ServiceSchema/ServiceSchema.json";
 
 function Services() {
   SetReoute(serviceSchema.projectProxyRoute);

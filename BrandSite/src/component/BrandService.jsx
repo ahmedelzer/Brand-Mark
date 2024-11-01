@@ -2,10 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { brandServiceStyles } from "./styles"; // Import the styles
 
-function BrandService({ name, desc, img }) {
+function BrandService({ name, desc, img, serviceID }) {
+  const routeForm = `/form/${serviceID}`;
+
   return (
     <div className={brandServiceStyles.container}>
-      <Link to="/form">
+      <Link to={routeForm}>
         <div className={brandServiceStyles.card}>
           <div className={brandServiceStyles.iconWrapper}>
             {img ? (
@@ -28,8 +30,8 @@ function BrandService({ name, desc, img }) {
           <h4 className={brandServiceStyles.title}>{name}</h4>
           <p className={brandServiceStyles.description}>{desc}</p>
           <div className={brandServiceStyles.buttonWrapper}>
-            <Link to="/form" className={brandServiceStyles.button}>
-              Buy Now
+            <Link to={routeForm} className={brandServiceStyles.button}>
+              Request
             </Link>
           </div>
         </div>

@@ -4,9 +4,13 @@ import {
   languageName,
   SetHeaders,
   token,
-} from "../../../request";
-export default async function APIHandling(url, methodType, sendBody) {
+} from "../../request";
+export default async function APIHandling(url, methodType, sendBody, query) {
   var myHeaders = new Headers();
+  let urlRoute = GetProjectUrl() + "/" + url;
+  if (methodType == "Get") {
+    urlRoute = query;
+  }
   for (const [key, value] of Object.entries(SetHeaders())) {
     myHeaders.append(key, value);
   }
@@ -17,12 +21,13 @@ export default async function APIHandling(url, methodType, sendBody) {
   var requestOptions = {
     method: methodType,
     headers: myHeaders,
-    body: raw,
+    // body: raw,
     redirect: "follow",
   };
-
+  if (methodType !== "Get") requestOptions = { ...requestOptions, body: raw };
+  console.log(requestOptions);
   try {
-    const response = await fetch(GetProjectUrl() + "/" + url, requestOptions);
+    const response = await fetch(urlRoute, requestOptions);
     const result = await response.json();
 
     // Check if the API call was successful based on the HTTP status code
@@ -48,7 +53,7 @@ export default async function APIHandling(url, methodType, sendBody) {
     // If there's an exception, return an error response
     const exceptionResponse = {
       success: false,
-      error: "An error occurred during the API call.",
+      error: error,
     };
     return exceptionResponse;
   }

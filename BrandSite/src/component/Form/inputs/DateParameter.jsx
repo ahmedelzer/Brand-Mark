@@ -14,6 +14,7 @@ class DateParameter extends BaseInput {
         defaultValue={value}
         placeholderText={placeholder}
         // setInfo={setInfo}
+        {...this.props}
         enable={Enable}
       />
     );

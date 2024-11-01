@@ -6,7 +6,6 @@ import {
   request,
   SetHeaders,
 } from "../../request";
-import RedirectToLogin from "./RedirectToLogin";
 import UseFetchWithoutBaseUrl from "./UseFetchWithoutBaseUrl";
 
 const useFetch = (url, base_URL) => {

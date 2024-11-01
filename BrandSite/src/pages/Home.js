@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Hero from "../component/Hero";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import Loading from "../component/Loading";
+import Loading from "../component/Loading/Loading";
 import Posts from "../component/Posts";
 import { contentStyles, heroStyles } from "../component/styles";
 import Card from "../component/Card";
@@ -9,7 +9,11 @@ import MainContent from "../component/MainContent";
 import { LanguageContext } from "../context/Language";
 import { defaultProjectProxyRoute } from "../request";
 function Home() {
-  const { data: fullHomeMainContents, isLoading } = useFetch(
+  const {
+    data: fullHomeMainContents,
+    isLoading,
+    error,
+  } = useFetch(
     "/Home/GetFullHomeMainContents?PageSize=11&PageNumber=1",
     defaultProjectProxyRoute
   );
@@ -18,10 +22,12 @@ function Home() {
     defaultProjectProxyRoute
   );
   const { localization } = useContext(LanguageContext);
-
-  console.log(fullHomeMainContents);
-  if (isLoading) {
+  if (isLoading || !fullHomeMainContents) {
     return <Loading />;
+  }
+  if (error && !fullHomeMainContents) {
+    // Handle error, e.g., display an error message
+    return <div>Error: {error.message}</div>;
   }
   return (
     <div>
@@ -31,7 +37,7 @@ function Home() {
           {localization.home.mainContentTitle}
         </h2>
         {fullHomeMainContents &&
-          fullHomeMainContents?.dataSource.map((mainContent, index) => (
+          fullHomeMainContents?.dataSource?.map((mainContent, index) => (
             <MainContent
               files={mainContent.postWithDisplayFiles.displayFiles}
               postTitle={mainContent?.postWithDisplayFiles.post.postTitle}

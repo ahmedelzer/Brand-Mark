@@ -1,12 +1,16 @@
+// import APIHandling from "../../hooks/APIsFunctions/APIHandling";
+import { SetReoute } from "../../request";
+import { SharedLists } from "./SharedLists";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
-import { SharedLists } from "../PartingFrom/SharedLists";
 
 export const onApply = async (
   editedRow,
   iDField,
   isNew,
   action,
-  schemaParameters = false
+  proxyRoute,
+  schemaParameters = false,
+  query
 ) => {
   let row = schemaParameters
     ? SharedLists(editedRow, schemaParameters, "parameterField")
@@ -18,11 +22,12 @@ export const onApply = async (
         entityID: `${editedRow[iDField]}`,
         ...{ patchJSON: editedRow },
       };
-
+  proxyRoute && SetReoute(proxyRoute);
   const res = await APIHandling(
     action.routeAdderss,
     action.dashboardFormActionMethodType,
-    body
+    body,
+    query
   );
 
   return res;

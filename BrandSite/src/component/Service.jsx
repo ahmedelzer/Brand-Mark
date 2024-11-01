@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useContext,
   useEffect,
@@ -7,30 +7,29 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Link } from "react-router-dom";
+import { LanguageContext } from "../context/Language";
+import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
+import LoadData from "../hooks/APIsFunctions/loadData";
+import { SetReoute } from "../request";
+import serviceSchema from "../Schemas/ServiceSchema/ServiceSchema.json";
+import serviceSchemaActions from "../Schemas/ServiceSchema/ServiceSchemaActions.json";
+import BrandService from "./BrandService";
 import BrandServiceCategory from "./BrandServiceCategory";
 import PageHeading from "./PageHeading";
-import BrandService from "./BrandService";
-import { listObserverStyle, serviceStyles } from "./styles";
-import { LanguageContext } from "../context/Language";
-import serviceSchemaActions from "../Schemas/ServiceSchema/ServiceSchemaActions.json";
-import serviceSchema from "../Schemas/ServiceSchema/ServiceSchema.json";
-import { GetProjectUrl, SetReoute } from "../request";
-import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
-import UseFetchWithoutBaseUrl from "../hooks/APIsFunctions/UseFetchWithoutBaseUrl";
-import reducer from "./Pagination/reducer";
+import { getRemoteRows } from "./Pagination/getRemoteRows";
 import { initialState } from "./Pagination/initialState";
-import LoadData from "../hooks/APIsFunctions/loadData";
-// import { getRemoteRows } from "./Pagination/getRemoteRows";
-//todo find a better way to handle loading and pagination and the key of pagination
-// show who fun he getRemoteRows
-import Loading from "./Loading";
+import reducer from "./Pagination/reducer";
+import { listObserverStyle, serviceStyles } from "./styles";
+import keys from "../Schemas/Keys.json";
+import { createRowCache } from "@devexpress/dx-react-grid";
+import DotsLoading from "./Loading/DotsLoading";
+import { updateRows } from "./Pagination/updateRows";
 const VIRTUAL_PAGE_SIZE = 2;
-function Service({ services, serviceCategoryID }) {
+function Service({ categories, serviceCategoryID, setServiceCategoryID }) {
   const { localization } = useContext(LanguageContext);
   const [state, dispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, "serviceID")
+    initialState(VIRTUAL_PAGE_SIZE, keys.serviceKey)
   );
   const [currentSkip, setCurrentSkip] = useState(1);
   const observerRef = useRef();
@@ -42,40 +41,39 @@ function Service({ services, serviceCategoryID }) {
       ServiceCategoryID: serviceCategoryID,
     });
   };
+  const cache = createRowCache(VIRTUAL_PAGE_SIZE);
   const getAction =
     serviceSchemaActions &&
     serviceSchemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Get"
     );
-  const updateRows = (skip, rows, newTotalCount) => {
-    dispatch({
-      type: "UPDATE_ROWS",
-      payload: {
-        skip,
-        rows: rows,
-        totalCount: newTotalCount ? newTotalCount : state.totalCount,
-      },
-    });
-  };
-  useEffect(() => {
-    LoadData(state, dataSourceAPI, getAction, updateRows, dispatch);
-  });
-  const getRemoteRows = (requestedSkip, take) => {
-    dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
-    // Load remote data logic here
-  };
+
   const { rows, skip, totalCount, loading } = state;
   const observerCallback = useCallback(
     (entries) => {
       const [entry] = entries;
       if (entry.isIntersecting && rows.length < totalCount && !loading) {
-        getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2);
+        getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2, dispatch);
         setCurrentSkip(currentSkip + 1);
       }
     },
     [rows, totalCount, loading, skip]
   );
-
+  useEffect(() => {
+    // Reset the state when serviceCategoryID changes
+    dispatch({ type: "RESET_SERVICE_LIST" }); // Reset services
+    setCurrentSkip(1); // Reset pagination
+  }, [serviceCategoryID]); // Re-fetch data when serviceCategoryID changes
+  useEffect(() => {
+    LoadData(
+      state,
+      dataSourceAPI,
+      getAction,
+      cache,
+      updateRows(dispatch, cache, state),
+      dispatch
+    );
+  });
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
@@ -104,7 +102,11 @@ function Service({ services, serviceCategoryID }) {
           />
         </div>
         <div className={serviceStyles.categoryWrapper}>
-          <BrandServiceCategory />
+          <BrandServiceCategory
+            categories={categories}
+            serviceCategoryID={serviceCategoryID}
+            setServiceCategoryID={setServiceCategoryID}
+          />
         </div>
         <div className={serviceStyles.serviceWrapper}>
           {rows.map((service) => (
@@ -113,13 +115,18 @@ function Service({ services, serviceCategoryID }) {
               name={service.serviceName}
               desc={service.serviceDescription}
               img={service.ServiceImage}
+              serviceID={service.serviceID}
             />
           ))}
         </div>
         {rows && (
           <div ref={observerRef} className={listObserverStyle.container} />
         )}
-        {loading && <Loading />}
+        {loading && (
+          <div className="text-center">
+            <DotsLoading />
+          </div>
+        )}
       </div>
     </section>
   );

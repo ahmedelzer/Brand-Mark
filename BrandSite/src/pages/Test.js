@@ -1,29 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, InputGroup, Button, InputGroupText } from "reactstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import RotatedArrow from "../component/RotatedArrow";
 import TypeFile from "../component/TypeFile";
+import OTPForm from "../component/Form/OTPForm";
+import LocationMap from "../component/Form/LocationMap";
 
 const Test = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  // const [passwordVisible, setPasswordVisible] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
+  // Set user's current location on initial load
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setLocation({ latitude, longitude });
+        },
+        (err) => {
+          setError(err.message);
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by this browser.");
+    }
+  }, []);
+
+  const handleLocationChange = (newLocation) => {
+    setLocation(newLocation);
+    console.log("Updated Location:", newLocation); // You can use this location data
   };
 
   return (
-    <InputGroup dir="rtl">
-      <Input
-        type={passwordVisible ? "text" : "password"}
-        placeholder="Enter your password"
-        style={{ textAlign: "right" }} // Align text to the right
+    // <InputGroup dir="rtl">
+    //   <Input
+    //     type={passwordVisible ? "text" : "password"}
+    //     placeholder="Enter your password"
+    //     style={{ textAlign: "right" }} // Align text to the right
+    //   />
+    //   {/* <InputGroupAddon addonType="prepend"> */}
+    //   <Button onClick={togglePasswordVisibility}>
+    //     {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+    //   </Button>
+    //   {/* </InputGroupAddon> */}
+    // </InputGroup>
+    <div>
+      <h1>Select a Location</h1>
+      {error && <p>Error: {error}</p>}
+      <LocationMap
+        location={location}
+        onLocationChange={handleLocationChange}
       />
-      {/* <InputGroupAddon addonType="prepend"> */}
-      <Button onClick={togglePasswordVisibility}>
-        {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-      </Button>
-      {/* </InputGroupAddon> */}
-    </InputGroup>
+      <div>
+        <h2>Selected Location</h2>
+        {location ? (
+          <>
+            <p>Latitude: {location.latitude}</p>
+            <p>Longitude: {location.longitude}</p>
+          </>
+        ) : (
+          <p>No location selected yet</p>
+        )}
+      </div>
+    </div>
   );
 
   // return (

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import Posts from "../component/Posts";
 import PageHeading from "../component/PageHeading";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import Loading from "../component/Loading";
+import Loading from "../component/Loading/Loading";
 import MainContent from "../component/MainContent";
 import PlayList from "../component/PlayList";
 import { LanguageContext } from "../context/Language";
@@ -68,7 +68,7 @@ function Portfolio() {
             desc={localization.portfolio.PageHeading.desc}
           />
         </div>
-        <h2 className="h2 mb-6 text-center xl:text-left">
+        <h2 className="h2 mb-6 text-center">
           {localization.portfolio.headerOfWorking}
         </h2>
         {portfolioWork?.dataSource.map((item) => (

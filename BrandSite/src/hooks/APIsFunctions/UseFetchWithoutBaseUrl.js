@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   defaultProjectProxyRoute,
   GetProjectUrl,
   request,
+  SetHeaders,
 } from "../../request";
-import RedirectToLogin from "./RedirectToLogin";
+import { LanguageContext } from "../../context/Language";
 
 const UseFetchWithoutBaseUrl = (realurl) => {
   // console.log(base_URL, GetProjectUrl());
   const navigate = useNavigate();
-
+  const { Lan } = useContext(LanguageContext);
   //base_URL = "";
 
   const [data, setData] = useState(null);
@@ -20,6 +21,19 @@ const UseFetchWithoutBaseUrl = (realurl) => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      request.interceptors.request.use(
+        (config) => {
+          config.headers = {
+            ...config.headers,
+            ...SetHeaders(), // Update headers before sending the request
+          };
+          return config;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+      );
+
       try {
         const res = await request.get(realurl);
         setData(res.data);
@@ -34,7 +48,7 @@ const UseFetchWithoutBaseUrl = (realurl) => {
     };
 
     fetchData();
-  }, [realurl]);
+  }, [realurl, Lan]);
 
   return { data, isLoading, error };
 };

@@ -11,7 +11,12 @@
     min-height: 100vh;
   }
 }
-
+.react-datepicker-popper {
+  z-index: 299;
+}
+.react-datepicker-wrapper {
+  display: block !important;
+}
 .font-bold {
   font-family: ubuntu-bold;
 }

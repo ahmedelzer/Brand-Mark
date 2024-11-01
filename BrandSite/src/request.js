@@ -28,7 +28,8 @@ export function SetHeaders() {
   const headers = {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Credentials": "true",
+    // "Access-Control-Allow-Origin": "*",
     languageID: window.localStorage.getItem("languageID"),
   };
 
@@ -41,9 +42,11 @@ export function SetHeaders() {
 
   return headers;
 }
+
 export const request = axios.create({
-  baseURL: baseURL,
-  headers: {
-    ...SetHeaders(),
-  },
+  // baseURL: baseURL,
+  // headers: {
+  //   ...SetHeaders(),
+  // },
+  // withCredentials: true,
 });

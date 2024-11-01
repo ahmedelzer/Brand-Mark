@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import YourInfo from "./YourInfo";
 import Plan from "./Plan";
 import BackgroundSidebar from "../../assets/bg-sidebar-desktop.svg";
@@ -16,25 +16,64 @@ import "./index.css";
 import FormContainer from "../DynamicPopup/FormContainer";
 import personalInfoSchema from "./Schema/parsonalInfo.json";
 import SectionHeading from "./SectionHeading";
-const Form = () => {
+///
+import { useParams } from "react-router-dom";
+import serviceSchema from "../../Schemas/ServiceSchema/ServiceSchema.json";
+import dashboardItemSchema from "../../Schemas/DashboardItemSchema/DashboardItemSchema.json";
+import { GetProjectUrl, SetReoute } from "../../request.js";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import Loading from "../Loading/Loading";
+import { onApply } from "../DynamicPopup/OnApplay";
+import DrawFrom from "./DrawFrom";
+import { RegistrationContext } from "../../context/Registration";
+//schemas
+import LoginFormSchema from "../../Schemas/LoginSchema/LoginFormSchema.json";
+import CustomerRequest from "../../Schemas/StepsFrom/CustomerRequest.json";
+import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
+import { formStyle } from "./styles";
+import { LanguageContext } from "../../context/Language";
+// import useFetch from "@/src/hooks/APIsFunctions/useFetch";
+//todo steps of form
+//1-take steps and display it and handle active step
+//2-take from serviceRegistrationSteps the fromContainer of this step by that addDashboardItem
+//3-when click next make row of all data form and marge it when click confirm button send body to the post action from action schema that addDashboardItem
+//todo steps of Registration
+//1-make isSigh =true only when verify code and go next or when know if he did that
+//2-make havePersonalInfo =true when he clicked on go verify button
+const Form = ({
+  serviceRegistrationSteps,
+  serviceRegistrationID,
+  setServiceRegistrationID,
+}) => {
   //------------------------------STATES------------------------------
-  const [stepNumber, setStepNumber] = useState(() => 1);
+  ///
+  const { isSigh, setIsSigh, customerRequestID, setCustomerRequestID } =
+    useContext(RegistrationContext);
+  const { serviceID } = useParams();
+
+  const { localization } = useContext(LanguageContext);
+  const [stepNumber, setStepNumber] = useState(isSigh ? 2 : 1);
+  const [margeRow, setMargeRow] = useState({});
+  const [result, setResult] = useState({});
+  const [disable, setDisable] = useState(false);
+  const [havePersonalInfo, setHavePersonalInfo] = useState(isSigh);
+
   const [goBackVisible, setGoBackVisible] = useState("invisible");
   const [steps, setSteps] = useState([
     { id: 1, title: "YOUR INFO", active: true },
-    { id: 2, title: "SELECT PLAN", active: false },
-    { id: 3, title: "ADD-ONS", active: false },
-    { id: 4, title: "SUMMARY", active: false },
+    ...serviceRegistrationSteps.dataSource.map((step, index) => ({
+      id: index + 2, // Dynamically assign ID
+      title: step.serviceRegistrationName, // Use the correct title
+      active: false, // Set active to false for subsequent steps
+    })),
   ]);
-
   const [yourInfo, setYourInfo] = useState({
     name: "",
     email: "",
     phone: "",
   });
   const [isEmpty, setIsEmpty] = useState(false);
-  const [result, setResult] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const [isPlanEmpty, setIsPlanEmpty] = useState(false);
   const [planDuration, setPlanDuration] = useState("mo");
   const [planDurationName, setPlanDurationName] = useState("Monthly");
@@ -108,6 +147,20 @@ const Form = () => {
   const [addons, setAddons] = useState([]);
 
   const [displayThankyou, setDisplayThankyou] = useState(false);
+  // -----------------------call APIS----------------
+  SetReoute(serviceSchema.projectProxyRoute);
+  const {
+    data: serviceRegistration,
+    isLoading,
+    error,
+  } = useFetch(
+    //${serviceRegistrationSteps?.dataSource[0]?.serviceRegistrationID}
+    `/Service/GetServiceRegistration/${serviceRegistrationID}`,
+    GetProjectUrl()
+  );
+  SetReoute(dashboardItemSchema.projectProxyRoute);
+
+  // console.log(serviceRegistrationSteps, serviceRegistration, addDashboardItem);
 
   //------------------------------SIDE EFFECTS------------------------------
   useEffect(() => {
@@ -150,42 +203,158 @@ const Form = () => {
   ]);
 
   //------------------------------FUNCTIONS------------------------------
-  const onSubmit = (e) => {
+  const onSubmit = async (e, action, type, route) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
-    setLoading(true);
-    console.log(formJson);
-
-    setLoading(false);
-  };
-  const nextStep = () => {
-    // if (stepNumber == 1) {
-    //   if (
-
-    //   ) {
-    //     setIsEmpty(true);
-    //     return;
-    //   } else {
-    //     setIsEmpty(false);
-    //   }
-    // }
-
-    if (stepNumber == 2) {
-      if (plan.title.length == 0) {
-        setIsPlanEmpty(true);
-        return;
+    if (type == "next step") {
+      if (stepNumber === steps.length) {
+        setDisable(true);
+        try {
+          const request = await onApply(
+            {
+              ...margeRow,
+              ...formJson,
+              customerRequestID: customerRequestID,
+            },
+            null,
+            true,
+            action,
+            route
+          );
+          if (request) {
+            setResult(request);
+            setDisplayThankyou(true);
+          }
+        } catch (error) {
+          console.error("API call failed:", error);
+          // Optionally, handle the error here (e.g., show a notification)
+        } finally {
+          // Enable the button after the API call
+          setDisable(false);
+        }
       } else {
-        setIsPlanEmpty(false);
+        setDisable(true);
+        try {
+          const request = await onApply(
+            {
+              ...formJson,
+              customerRequestID: customerRequestID,
+            },
+            null,
+            true,
+            action,
+            route
+          );
+          if (request) {
+            setResult(request);
+            setServiceRegistrationID(
+              serviceRegistrationSteps?.dataSource[stepNumber - 1]
+                .serviceRegistrationID
+            );
+            setStepNumber((prev) => prev + 1);
+            setMargeRow({
+              ...margeRow,
+              ...formData,
+            });
+          }
+        } catch (error) {
+          console.error("API call failed:", error);
+          // Optionally, handle the error here (e.g., show a notification)
+        } finally {
+          // Enable the button after the API call
+          setDisable(false);
+        }
+      }
+    } else if (type == "do not sigh before") {
+      setDisable(true);
+      try {
+        const request = await onApply(
+          formJson,
+          null,
+          true,
+          action,
+          LoginFormSchema.projectProxyRoute
+        );
+        if (request && request.success === true) {
+          setResult(request);
+          setMargeRow({ ...margeRow, ...request.data, ...formJson });
+          setHavePersonalInfo(() => true);
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+        // Optionally, handle the error here (e.g., show a notification)
+      } finally {
+        // Enable the button after the API call
+        setDisable(false);
+      }
+    } else if (type == "havePersonalInfo without Verification") {
+      const verificationID = result.data;
+      setDisable(true);
+      const dataSourceAPI = (query) => {
+        SetReoute(LoginFormSchema.projectProxyRoute);
+
+        return buildApiUrl(query, { ...formJson, ...verificationID });
+      };
+      try {
+        const request = await onApply(
+          {},
+          null,
+          true,
+          action,
+          LoginFormSchema.projectProxyRoute,
+          false,
+          dataSourceAPI(action)
+        );
+        const date = new Date();
+        const timeZoneOffset = date.getTimezoneOffset();
+
+        const bodyCustomerRequest = {
+          languageID: window.localStorage.getItem("languageID"),
+          timeZoneConvert: timeZoneOffset,
+          verificationCodeID: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          contact:
+            margeRow.messageType === "0"
+              ? margeRow.phoneNumber
+              : margeRow.email,
+          contactCodeNumber: +margeRow.messageType,
+          brandServiceID: serviceID,
+          ...formJson,
+          ...verificationID,
+        };
+        const customerRequest = await onApply(
+          bodyCustomerRequest,
+          null,
+          true,
+          CustomerRequest,
+          route,
+          false
+        );
+        if (request && request.success === true && customerRequest.success) {
+          window.sessionStorage.setItem(
+            "customerRequestID",
+            customerRequest.data.customerRequestID
+          );
+          setCustomerRequestID(customerRequest.data.customerRequestID);
+          setResult(request);
+          setIsSigh(true);
+          setMargeRow({ ...margeRow, ...formJson, ...verificationID });
+          window.sessionStorage.setItem("isSigh", true);
+          setStepNumber((prev) => prev + 1);
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+        // Optionally, handle the error here (e.g., show a notification)
+      } finally {
+        // Enable the button after the API call
+        setDisable(false);
       }
     }
-
-    setStepNumber((prevStep) => prevStep + 1);
   };
 
   const prevStep = () => {
-    setStepNumber((prevStep) => prevStep - 1);
+    setStepNumber((prevStep) => prevStep + 1);
   };
 
   const changeClick = () => {
@@ -295,40 +464,46 @@ const Form = () => {
     });
   };
 
-  // const selectAddon = (id) => {
-  //   setAddonOptions((prevAddons) => {
-  //     const updatedAddons = prevAddons.map((addon) => {
-  //       if (addon.id == id) {
-  //         if (addon.selected == false) {
-  //           return { ...addon, selected: true };
-  //         } else {
-  //           return { ...addon, selected: false };
-  //         }
-  //       } else {
-  //         return addon;
-  //       }
-  //     });
-  //     return updatedAddons;
-  //   });
-  // };
+  const selectAddon = (id) => {
+    setAddonOptions((prevAddons) => {
+      const updatedAddons = prevAddons.map((addon) => {
+        if (addon.id == id) {
+          if (addon.selected == false) {
+            return { ...addon, selected: true };
+          } else {
+            return { ...addon, selected: false };
+          }
+        } else {
+          return addon;
+        }
+      });
+      return updatedAddons;
+    });
+  };
+  if (isLoading || !serviceRegistration) {
+    return <Loading />;
+  }
+  if (error && !serviceRegistration) {
+    // Handle error, e.g., display an error message
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     // <div className="bg-white !h-full">
-    <div className="container body">
-      <div className="bg-[#d6d9e6] md:bg-white rounded-xl md:p-3 md:flex justify-center">
-        <div className="relative">
+    <div className={formStyle.body}>
+      <div className={formStyle.container}>
+        <div className={formStyle.relativeDiv}>
           <img
-            className="hidden md:block"
+            className={formStyle.sidebarImage}
             src={BackgroundSidebar}
             alt="sidebar"
           />
           <img
-            className="block md:hidden w-full"
+            className={formStyle.topbarImage}
             src={BackgroundSidebarMobile}
             alt="topbar"
           />
-
-          <div className="flex justify-center mt-8 absolute inset-0 space-x-10 md:space-x-0 md:block md:mt-0 md:pl-6 md:pt-8 md:space-y-7">
+          <div className={formStyle.stepsContainer}>
             {steps.map((step) => (
               <Step
                 key={step.id}
@@ -339,100 +514,53 @@ const Form = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col justify-between absolute top-40 w-[450px] md:static mb-40 rounded-2xl mx-8 px-16 pt-10 pb-16 bg-white md:px-0 md:py-5 md:mx-28 md:w-100 md:my-2">
+        <div className={formStyle.thankYouContainer}>
           {(displayThankyou && (
-            //<div className="flex flex-col justify-between absolute top-40 w-[450px] md:static mb-40 rounded-2xl mx-8 px-16 pt-10 pb-16 bg-white md:px-0 md:py-5 md:mx-28 md:w-100 md:my-2">
             <>
               <Thankyou />
             </>
-            //</div>
           )) || (
-            // <div className="flex flex-col justify-between absolute top-40 w-[450px] md:static mb-40 rounded-2xl mx-8 px-16 pt-10 pb-16 bg-white md:px-0 md:py-5 md:mx-28 md:w-100 md:my-2">
             <>
-              {/* <div>
-                {(stepNumber === 1 && (
-                  <YourInfo
-                    onChangeYourInfo={changeYourInfo}
-                    yourInfo={yourInfo}
-                    currentStep={stepNumber}
-                    isEmpty={isEmpty}
-                    onSubmit={onSubmit}
-                  />
-                )) ||
-                  (stepNumber === 2 && (
-                    <Plan
-                      onPlanSelect={selectPlan}
-                      onToggleDuration={toggleDuration}
-                      currentStep={stepNumber}
-                      planOptions={planOptions}
-                      isPlanEmpty={isPlanEmpty}
-                      planDuration={planDuration}
-                    />
-                  )) ||
-                  (stepNumber === 3 && (
-                    <Addons
-                      onBoxCheck={checkBox}
-                      currentStep={stepNumber}
-                      addonOptions={addonOptions}
-                      planDuration={planDuration}
-                    />
-                  )) ||
-                  (stepNumber === 4 && (
-                    <Summary
-                      selectedPlan={plan}
-                      selectedAddons={addons}
-                      currentStep={stepNumber}
-                      planDuration={planDuration}
-                      planDurationName={planDurationName}
-                      onChangeClick={changeClick}
-                    />
-                  ))}
-              </div> */}
               <div>
-                <SectionHeading
-                  title="Personal Info"
-                  desc="Please provide your name, email address, and phone number."
-                />
-                <form onSubmit={onSubmit}>
-                  <FormContainer
-                    tableSchema={personalInfoSchema}
-                    row={{}}
-                    returnRow={() => {}}
+                {!isSigh && havePersonalInfo ? (
+                  <SectionHeading
+                    title={localization.formSteps.verification.title}
+                    desc={
+                      "Enter the 6-digit verification code that was sent to your phone number."
+                    }
                   />
-                  <div className="flex justify-between fixed px-16 bottom-0 left-0 w-full bg-white py-5 md:static md:p-0  items-center w-[700px]]">
-                    <div
-                      onClick={prevStep}
-                      className={`font-medium text-[#9699ab] select-none cursor-pointer transition duration-100 hover:text-[#02295a] ${goBackVisible}`}
-                    >
-                      Go back
-                    </div>
-                    {stepNumber === 4 ? (
-                      <div
-                        onClick={() => setDisplayThankyou(true)}
-                        className="font-medium bg-[#473dff] select-none text-white py-3 px-5 rounded-lg cursor-pointer transition duration-100 hover:opacity-90"
-                      >
-                        Confirm
-                      </div>
-                    ) : (
-                      <button
-                        // onClick={onSubmit}
-                        type="submit"
-                        // type="button"
-                        // onClick={nextStep}
-                        className="font-medium bg-[#02295a] select-none text-white py-3 px-5 rounded-lg cursor-pointer transition duration-100 hover:opacity-90"
-                      >
-                        Next Step
-                      </button>
-                    )}
-                  </div>
-                </form>
+                ) : (
+                  <SectionHeading
+                    title={
+                      isSigh
+                        ? serviceRegistration.serviceRegistrationName
+                        : localization.formSteps.personalInfo.title
+                    }
+                    desc="Please provide your name, email address, and phone number."
+                  />
+                )}
+                {serviceRegistration.addDashboardItemID && (
+                  <DrawFrom
+                    serviceRegistration={serviceRegistration}
+                    onSubmit={onSubmit}
+                    disable={disable}
+                    prevStep={prevStep}
+                    result={result}
+                    returnInfoStep={() => {
+                      setIsSigh(false);
+                      setHavePersonalInfo(false);
+                    }}
+                    havePersonalInfo={havePersonalInfo}
+                    isConfirm={stepNumber === steps.length}
+                  />
+                )}
               </div>
             </>
-            // </div>
           )}
         </div>
       </div>
     </div>
+
     // </div>
   );
 };

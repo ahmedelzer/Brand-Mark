@@ -54,25 +54,25 @@ function Header() {
           {/* <button className={headerStyles.button}>
             {localization.header.buttonText}
           </button> */}
-          <a
+          {/* <a
             href={localization.header.buttonUrl}
             role="button"
             className="main-button mx-4"
           >
             {localization.header.buttonText}
-          </a>
+          </a> */}
         </div>
         <div className={headerStyles.mobileMenuIcon}>
           <LanguageSelector />
-          <a
+          {/* <a
             href={localization.header.buttonUrl}
             role="button"
             className="main-button mx-4"
           >
             {localization.header.buttonText}
-          </a>
+          </a> */}
           <FiMenu
-            className={headerStyles.menuIcon}
+            className={headerStyles.menuIcon + " mx-4"}
             onClick={() => setOpen(true)}
           />
         </div>
